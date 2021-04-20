@@ -1,0 +1,88 @@
+<html>
+
+<body ng-app="homeApp" ng-controller="homeCtrl">
+<h2> Price Calculator </h2>
+
+<select ng-model="vehicleType">
+ <option ng-repeat="type in types"
+            value="{{type.value}}">
+      {{type.name}}
+    </option>
+<select>
+
+<input ng-model="distance" placeholder="Enter distance" type="number">
+
+<button ng-click="calculate(distance, vehicleType)">calculate</button>
+<br>
+<h3>Price :: {{price}} ₹</h3>
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<script>
+var home = angular.module('homeApp', []);
+home.controller('homeCtrl', function($scope) {
+$scope.types = [
+{ value: '', name: 'Select vehicle type' },
+	{ value: 'mini', name: 'Mini' },
+	{ value: 'medium', name: 'Medium' },
+	{ value: 'large', name: 'Large' }
+];
+	$scope.price = 0;
+	$scope.calculate = function(distance, type) {
+
+    const max =    MAX_DIST;
+    const prfl =   false;
+	$scope.price = 0;
+
+    if (!distance || !type || distance < 1 || isNaN(distance) || isNaN(max)) {
+
+      return 0;
+    }
+
+    const pricing = PRICING[type].cost;
+    const prfList = PRICING[type].prf;
+    const prfLimit = prfList.length - 1;
+    const actualDistance = BASE + 1;
+    let cost = 0;
+    if (Array.isArray(pricing) && !isNaN(distance) && distance > 0 && distance <= max) {
+      const baseCost = BASE * pricing[0];
+      distance -= BASE;
+      const divisor = Math.ceil((distance / actualDistance) - 1);
+      if (divisor > 0) {
+        for (let i = 0; i <= divisor; i++) {
+          let dist = 0;
+          if (distance > actualDistance) {
+            dist = actualDistance;
+            distance -= actualDistance;
+          } else {
+            dist = distance;
+          }
+          cost += (dist * (pricing[i + 1] ? pricing[i + 1] : pricing[pricing.length - 1]));
+        }
+      } else if (divisor === 0 && distance > 0) {
+        cost += distance * pricing[1];
+      }
+      const prfIndex = divisor >= 0 ? (divisor < prfLimit  ? (divisor + 1) : prfLimit) : 0;
+      cost += baseCost + (prfl ? 0 : prfList[prfIndex]);
+    }
+    $scope.price = Math.ceil(cost);
+  }
+});
+
+const BASE = 6;
+const MAX_DIST = 1000;
+const NUMBER = {
+  large: { cost: [166.7, 120, 90, 70, 60, 75], prf: [350, 375, 400, 430, 460, 500, 550]},
+  medium: { cost: [125, 100, 70, 55, 50], prf: [300, 320, 350, 370, 400, 450, 500]},
+  mini: { cost: [70, 55, 45, 40, 35, 25], prf: [100, 130, 160, 200, 235, 270, 300]}
+};
+const PRICING = {
+  large: NUMBER.large,
+  medium: NUMBER.medium,
+  mini: NUMBER.mini
+};  
+  
+</script>
+
+</html>
