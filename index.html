@@ -21,6 +21,19 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 <script>
 var home = angular.module('homeApp', []);
+	const BASE = 6;
+const MAX_DIST = 1000;
+const NUMBER = {
+  large: { cost: [166.7, 120, 90, 70, 60, 75], prf: [350, 375, 400, 430, 460, 500, 550]},
+  medium: { cost: [125, 100, 70, 55, 50], prf: [300, 320, 350, 370, 400, 450, 500]},
+  mini: { cost: [70, 55, 45, 40, 35, 25], prf: [100, 130, 160, 200, 235, 270, 300]}
+};
+const PRICING = {
+  large: NUMBER.large,
+  medium: NUMBER.medium,
+  mini: NUMBER.mini
+};  
+  
 home.controller('homeCtrl', function($scope) {
 $scope.types = [
 { value: '', name: 'Select vehicle type' },
@@ -70,19 +83,7 @@ $scope.types = [
   }
 });
 
-const BASE = 6;
-const MAX_DIST = 1000;
-const NUMBER = {
-  large: { cost: [166.7, 120, 90, 70, 60, 75], prf: [350, 375, 400, 430, 460, 500, 550]},
-  medium: { cost: [125, 100, 70, 55, 50], prf: [300, 320, 350, 370, 400, 450, 500]},
-  mini: { cost: [70, 55, 45, 40, 35, 25], prf: [100, 130, 160, 200, 235, 270, 300]}
-};
-const PRICING = {
-  large: NUMBER.large,
-  medium: NUMBER.medium,
-  mini: NUMBER.mini
-};  
-  
+
 </script>
 
 </html>
